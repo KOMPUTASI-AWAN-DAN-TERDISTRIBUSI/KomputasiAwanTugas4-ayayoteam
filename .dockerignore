@@ -1,0 +1,8 @@
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+reticulum_announce/config_server/storage/
+reticulum_announce/config_client/storage/
+reticulum_announce/config_server/interfaces/
+reticulum_announce/config_client/interfaces/

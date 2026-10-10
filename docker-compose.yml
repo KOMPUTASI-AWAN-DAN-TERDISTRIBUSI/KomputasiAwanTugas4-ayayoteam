@@ -1,0 +1,59 @@
+services:
+  rpc-server:
+    build: .
+    container_name: rpc-server
+    working_dir: /app/rpc
+    command: ["python", "server.py"]
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  rpc-client:
+    build: .
+    container_name: rpc-client
+    working_dir: /app/rpc
+    environment:
+      RPC_HOST: rpc-server
+    command: ["python", "client.py"]
+    depends_on:
+      - rpc-server
+    stdin_open: true
+    tty: true
+
+  mq-publisher:
+    build: .
+    container_name: mq-publisher
+    working_dir: /app/message_queue
+    command: ["python", "publisher.py", "10"]
+    ports:
+      - "5555:5555"
+    restart: unless-stopped
+
+  mq-subscriber:
+    build: .
+    container_name: mq-subscriber
+    working_dir: /app/message_queue
+    environment:
+      ZMQ_HOST: mq-publisher
+    command: ["python", "subscriber.py"]
+    depends_on:
+      - mq-publisher
+    restart: unless-stopped
+
+  reticulum-pengirim:
+    build: .
+    container_name: reticulum-pengirim
+    working_dir: /app/reticulum_announce
+    command: ["python", "pengirim.py", "config_server"]
+    ports:
+      - "49000:49000"
+    restart: unless-stopped
+
+  reticulum-penerima:
+    build: .
+    container_name: reticulum-penerima
+    working_dir: /app/reticulum_announce
+    command: ["python", "penerima.py", "config_client_docker"]
+    depends_on:
+      - reticulum-pengirim
+    restart: unless-stopped

@@ -1,0 +1,15 @@
+[reticulum]
+  enable_transport = No
+  share_instance = No
+  instance_name = tugas4_penerima
+
+[interfaces]
+  [[Default Interface]]
+    type = AutoInterface
+    enabled = No
+
+  [[TCP Client]]
+    type = TCPClientInterface
+    enabled = Yes
+    target_host = reticulum-pengirim
+    target_port = 49000
